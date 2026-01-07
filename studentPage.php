@@ -16,11 +16,12 @@ session_start();
     <h3>公告<h3><br>
     <?php
     require_once "dbHandler.inc.php";
-    $result=$conn->query("select 日期, 內容 from 公告");
+    $result=$conn->query("select 日期, 內容 from 公告 order by 公告編號 desc");
     foreach($result as $row){
        echo htmlspecialchars($row['日期']);
        echo "&nbsp;&nbsp; ";  
-       echo htmlspecialchars($row['內容']);        
+       echo htmlspecialchars($row['內容']);   
+       echo "<br>";     
     }
     exit();
     ?>
