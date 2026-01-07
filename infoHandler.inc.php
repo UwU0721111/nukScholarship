@@ -13,6 +13,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     $result=$conn->query("update 使用者 set 姓名='$name', 密碼='$pwd',
                           電話='$tel', email='$email' where 帳號='$username'");
     if($result){
+        $_SESSION['name']=$name;
         echo"修改成功";
         ?>
         <br>
