@@ -1,0 +1,1 @@
+在xampp資料夾裡的htdocs裡開一個資料夾把php檔放進去就可以透過localhost連上
