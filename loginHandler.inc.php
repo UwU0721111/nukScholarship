@@ -12,16 +12,16 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         $user=$result->fetch_assoc();
         switch($user['種類']){
             case '學生':
-                header("Location: studentPage.php");
+                header("Location: Student/studentPage.php");
                 break;
             case '老師':
-                header("Location: teacherPage.php");
+                header("Location: Teacher/teacherPage.php");
                 break;
             case '獎助單位':
-                header("Location: providerPage.php");
+                header("Location: Provider/providerPage.php");
                 break;
             case '系統管理員':
-                header("Location: adminPage.php");
+                header("Location: Admin/adminPage.php");
         }
         $_SESSION['username']=$username;
         $_SESSION['name']=$user['姓名'];

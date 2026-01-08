@@ -10,7 +10,7 @@ session_start();
 </head>
 <body>
     <?php
-    require_once "dbHandler.inc.php";
+    require_once "../dbHandler.inc.php";
     $username=$_SESSION['username'];
     $result=$conn->query("select 使用者.姓名, 學號, 電話, email, 使用者.身分證ID, 監護人.姓名 as 監護人姓名, 關係 
     from (select 科系 from 老師 where 老師帳號='$username')as major, 使用者, 學生, 監護人 
@@ -18,8 +18,8 @@ session_start();
     ?>
     <table border="1">
         <tr>
-            <th>姓名</th>
             <th>學號</th>
+            <th>姓名</th>
             <th>電話</th>
             <th>email</th>
             <th>身分證ID</th>
@@ -30,10 +30,10 @@ session_start();
     foreach($result as $row){
         echo "<tr>";
         echo "<td>";
-        echo htmlspecialchars($row['姓名']);
+        echo htmlspecialchars($row['學號']);
         echo "</td>";
         echo "<td>";
-        echo htmlspecialchars($row['學號']);
+        echo htmlspecialchars($row['姓名']);
         echo "</td>";
         echo "<td>";
         echo htmlspecialchars($row['電話']);

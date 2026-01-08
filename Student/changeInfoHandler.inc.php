@@ -3,12 +3,16 @@ session_start();
 ?> 
 <?php
 if($_SERVER["REQUEST_METHOD"]=="POST"){
+    if($_POST['button']=="cancel"){
+        header("Location: studentPage.php");
+        exit();
+    }       
     $name=$_POST['name'];
     $pwd=$_POST['pwd'];
     $tel=$_POST['tel'];
     $email=$_POST['email'];
 
-    require_once "dbHandler.inc.php";
+    require_once "../dbHandler.inc.php";
     $username=$_SESSION['username'];
     $result=$conn->query("update 使用者 set 姓名='$name', 密碼='$pwd',
                           電話='$tel', email='$email' where 帳號='$username'");
