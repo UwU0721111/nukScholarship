@@ -24,18 +24,19 @@ session_start();
     <form action="infoHandler.inc.php" method="POST">
         <label>姓名：</label>
         <input type="text" name="name" value="<?php echo htmlspecialchars($name);?>"><br>
-        <label>身分：<label>
-        <label><?php echo htmlspecialchars($role);?><label><br>
-        <label>帳號：<label>
-        <label><?php echo htmlspecialchars($username);?><label><br>
-        <label>密碼：<label>
+        <label>身分：</label>
+        <label><?php echo htmlspecialchars($role);?></label><br>
+        <label>帳號：</label>
+        <label><?php echo htmlspecialchars($username);?></label><br>
+        <label>密碼：</label>
         <input type="text" name="pwd" value="<?php echo htmlspecialchars($pwd);?>"><br>
-        <label>電話：<label>
+        <label>電話：</label>
         <input type="text" name="tel" value="<?php echo htmlspecialchars($tel);?>"><br>
-        <label>email：<label>
+        <label>email：</label>
         <input type="text" name="email" value="<?php echo htmlspecialchars($email);?>"><br>
-        <label>身分證ID：<label>
-        <label><?php echo htmlspecialchars($ssn);?><label><br>
+        <label>身分證ID：</label>
+        <label><?php echo htmlspecialchars($ssn);?></label><br>
+        <a href="studentPage.php">取消</a>        
         <button>修改</button>
     </form>   
 </body>

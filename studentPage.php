@@ -17,13 +17,25 @@ session_start();
     <?php
     require_once "dbHandler.inc.php";
     $result=$conn->query("select 日期, 內容 from 公告 order by 公告編號 desc");
-    foreach($result as $row){
-       echo htmlspecialchars($row['日期']);
-       echo "&nbsp;&nbsp; ";  
-       echo htmlspecialchars($row['內容']);   
-       echo "<br>";     
-    }
-    exit();
     ?>
+    <table border="1">
+        <tr>
+            <th>日期</th>
+            <th>內容</th>
+        </tr>
+    <?php
+    foreach($result as $row){
+        echo "<tr>";
+        echo "<td>";
+        echo htmlspecialchars($row['日期']);
+        echo "</td>";
+        echo "<td>";
+        echo htmlspecialchars($row['內容']); 
+        echo "</td>";  
+        echo "</tr>";     
+    }
+    ?>
+    </table><br>
+    <button onclick="location.href='logout.inc.php'">登出</button>
 </body>
 </html>
