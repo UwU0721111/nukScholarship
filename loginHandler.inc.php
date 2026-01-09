@@ -1,4 +1,21 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入</title>
+</head>
+<body>
+    <h3>登入</h3>
+    <form action="loginHandler.inc.php" method="POST">
+        <label>帳號：</label>
+        <input type="text" name="username"><br>
+        <label>密碼：<label>
+        <input type="password" name="pwd"><br>
+        <button>登入</button>
+    <form>
+</body>
+</html>   loginhandler <?php
 session_start();
 ?> 
 <?php
@@ -10,21 +27,24 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     $result=$conn->query("select * from 使用者 where 帳號='$username' and 密碼='$pwd'");
     if($result->num_rows>0){
         $user=$result->fetch_assoc();
+
+	$_SESSION['username']=$username;
+        $_SESSION['name']=$user['姓名'];
+	$_SESSION['account'] = $user['帳號'];
         switch($user['種類']){
             case '學生':
-                header("Location: studentPage.php");
+                header("Location: Student/studentPage.php");
                 break;
             case '老師':
-                header("Location: teacherPage.php");
+                header("Location: Teacher/teacherPage.php");
                 break;
             case '獎助單位':
-                header("Location: providerPage.php");
+                header("Location: Provider/providerPage.php");
                 break;
             case '系統管理員':
-                header("Location: adminPage.php");
+                header("Location: Admin/adminPage.php");
         }
-        $_SESSION['username']=$username;
-        $_SESSION['name']=$user['姓名'];
+        
         exit();       
     }
     header("Location: index.php");
