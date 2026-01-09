@@ -3,7 +3,6 @@ date_default_timezone_set('Asia/Taipei');
 session_start();
 include_once __DIR__ . '/../dbhandler.inc.php';
 
-
 // 從 session 取得登入的學生帳號
 $studentAccount = isset($_SESSION['account']) ? $_SESSION['account'] : '';
 
@@ -43,10 +42,22 @@ $resultCourses = mysqli_query($conn, $sqlCourses);
     <meta charset="UTF-8">
     <title>成績單</title>
     <style>
+        body {
+            background-color: #f0f0f0; /* 2. 淺灰色背景 */
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        h2 {
+            text-align: center;  /* 1. 標題置中 */
+            margin-top: 24px;
+            margin-bottom: 16px;
+            color: #333;
+        }
         table {
             border-collapse: collapse;
             width: 80%;
-            margin-bottom: 20px;
+            margin: 20px auto;  /* 1. 表格置中 */
         }
         th, td {
             border: 1px solid #666;
@@ -61,6 +72,20 @@ $resultCourses = mysqli_query($conn, $sqlCourses);
         }
         .bold {
             font-weight: bold;
+        }
+        .back-btn {
+            position: fixed;   /* 3. 返回按鈕固定右下 */
+            right: 20px;
+            bottom: 20px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4a4a4a;
+            color: #fff;
+            cursor: pointer;
+        }
+        .back-btn:hover {
+            background-color: #3a3a3a;
         }
     </style>
 </head>
@@ -105,6 +130,7 @@ $resultCourses = mysqli_query($conn, $sqlCourses);
             <td><?php echo e($transcript['GPA']); ?></td>
         </tr>
     </table>
-    <button onclick="location.href='../Student/studentPage.php'">回首頁</button>
+
+    <button class="back-btn" onclick="location.href='../Student/studentPage.php'">回首頁</button>
 </body>
 </html>

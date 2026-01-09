@@ -37,10 +37,22 @@ if (!$result) {
     <meta charset="UTF-8">
     <title>申請資料列表</title>
     <style>
+        body {
+            background-color: #f0f0f0; /* 淺灰色背景 */
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        h2 {
+            text-align: center;  /* 標題置中 */
+            margin-top: 24px;
+            margin-bottom: 16px;
+            color: #333;
+        }
         table {
             border-collapse: collapse;
             width: 60%;
-            margin-bottom: 30px;
+            margin: 20px auto;  /* 表格置中 */
         }
         th, td {
             border: 1px solid #666;
@@ -50,6 +62,20 @@ if (!$result) {
         th {
             background-color: #eee;
             width: 30%;
+        }
+        .back-btn {
+            position: fixed;     /* 固定右下角 */
+            right: 20px;
+            bottom: 20px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4a4a4a;
+            color: #fff;
+            cursor: pointer;
+        }
+        .back-btn:hover {
+            background-color: #3a3a3a;
         }
     </style>
 </head>
@@ -94,8 +120,9 @@ if (!$result) {
             </table>          
         <?php } ?>
     <?php } else { ?>
-        <p>目前查無此學生的申請資料。</p>
+        <p style="text-align:center;">目前查無此學生的申請資料。</p>
     <?php } ?>
-    <button onclick="location.href='../Student/studentPage.php'">回首頁</button>
+
+    <button class="back-btn" onclick="location.href='../Student/studentPage.php'">回首頁</button>
 </body>
 </html>
