@@ -105,5 +105,6 @@ $resultCourses = mysqli_query($conn, $sqlCourses);
             <td><?php echo e($transcript['GPA']); ?></td>
         </tr>
     </table>
+    <button onclick="location.href='../Student/studentPage.php'">回首頁</button>
 </body>
 </html>

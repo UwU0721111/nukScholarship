@@ -91,10 +91,11 @@ if (!$result) {
                     <th>成績單編號</th>
                     <td colspan="3"><?php echo htmlspecialchars($row['成績單編號'], ENT_QUOTES, 'UTF-8'); ?></td>
                 </tr>
-            </table>
+            </table>          
         <?php } ?>
     <?php } else { ?>
         <p>目前查無此學生的申請資料。</p>
     <?php } ?>
+    <button onclick="location.href='../Student/studentPage.php'">回首頁</button>
 </body>
 </html>

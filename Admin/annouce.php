@@ -31,8 +31,8 @@
     </table><br>
     <h3>發布新公告</h3><br>
     <form action="annonHandler.inc.php" method="POST">
-        <label>內容：</label>
-        <input type="text" name="content" size="100"><br>
+        <label>內容：</label><br>
+        <textarea type="text" name="content" cols="50" rows="5"></textarea><br>
         <button name="button" value="cancel">取消</button>        
         <button name="button" value="submit">送出</button>
     </form>

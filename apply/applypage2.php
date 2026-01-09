@@ -32,7 +32,7 @@ $applyId = isset($_GET['id']) ? $_GET['id'] : '';
 $apply = null;
 if ($applyId !== '') {
     $sqlApply = "
-    SELECT 名稱, 申請編號, 自傳, 申請日期
+    SELECT 名稱, 申請編號, 自傳, 申請日期, 成績單編號, 獎助單位帳號
     FROM 申請資料
     WHERE 申請編號 = '" . mysqli_real_escape_string($conn, $applyId) . "'
     LIMIT 1
@@ -60,7 +60,36 @@ if ($applyId === '') {
     }
 }
 
-// 預設申請日期（若既有資料有值則用既有資料）
+// 查詢該學生的所有成績單
+$sqlTranscript = "
+SELECT 成績單編號, 學期
+FROM 成績單
+WHERE 學生帳號 = '" . mysqli_real_escape_string($conn, $studentAccount) . "'
+ORDER BY 學期 DESC
+";
+$resultTranscript = mysqli_query($conn, $sqlTranscript);
+$transcripts = [];
+$defaultTranscriptId = '';
+if ($resultTranscript) {
+    while ($row = mysqli_fetch_assoc($resultTranscript)) {
+        $transcripts[] = $row;
+        if ($defaultTranscriptId === '') {
+            $defaultTranscriptId = $row['成績單編號'];
+        }
+    }
+}
+
+// 查詢所有可申請的獎學金及其提供單位
+$sqlScholarships = "
+SELECT 獎學金.名稱, 獎學金.獎助單位帳號
+FROM 獎學金
+ORDER BY 獎學金.名稱
+";
+$resultScholarships = mysqli_query($conn, $sqlScholarships);
+$scholarships = [];
+while ($row = mysqli_fetch_assoc($resultScholarships)) {
+    $scholarships[] = $row;
+}
 $defaultDate = date('Y-m-d');
 $applyDate = (isset($apply['申請日期']) && $apply['申請日期'] !== '') ? $apply['申請日期'] : $defaultDate;
 
@@ -108,38 +137,58 @@ function e($str) {
             <tr>
                 <th>獎學金名稱</th>
                 <td>
-                    <input type="text" name="scholarship_name"
-                           value="<?php echo e(isset($apply['名稱']) ? $apply['名稱'] : ''); ?>"
-                           required>
+                    <select name="scholarship_name" id="scholarship_name" required onchange="updateProviderAccount()">
+                        <option value="">-- 請選擇 --</option>
+                        <?php foreach ($scholarships as $sch) { ?>
+                            <option value="<?php echo e($sch['名稱']); ?>" data-provider="<?php echo e($sch['獎助單位帳號']); ?>"
+                                <?php echo (isset($apply['名稱']) && $apply['名稱'] === $sch['名稱']) ? 'selected' : ''; ?>>
+                                <?php echo e($sch['名稱']); ?>
+                            </option>
+                        <?php } ?>
+                    </select>
                 </td>
                 <th>申請編號</th>
-                <td>
-                    <input type="text" name="apply_id"
-                           value="<?php echo e($applyId !== '' ? $apply['申請編號'] : $newApplyId); ?>"
-                           readonly>
-                </td>
+                <td><?php echo e($applyId !== '' ? $apply['申請編號'] : $newApplyId); ?></td>
             </tr>
             <tr>
                 <th>學生姓名</th>
-                <td><input type="text" value="<?php echo e(isset($student['姓名']) ? $student['姓名'] : ''); ?>" readonly></td>
+                <td><?php echo e(isset($student['姓名']) ? $student['姓名'] : ''); ?></td>
                 <th>學生帳號</th>
-                <td><input type="text" value="<?php echo e(isset($student['帳號']) ? $student['帳號'] : ''); ?>" readonly></td>
+                <td><?php echo e(isset($student['帳號']) ? $student['帳號'] : ''); ?></td>
+            </tr>
+            <tr>
+                <th>成績單編號</th>
+                <td colspan="3">
+                    <?php if (count($transcripts) > 0) { ?>
+                        <select name="transcript_id" id="transcript_id">
+                            <option value="">-- 請選擇成績單 --</option>
+                            <?php foreach ($transcripts as $trans) { ?>
+                                <option value="<?php echo e($trans['成績單編號']); ?>"
+                                    <?php echo (isset($apply['成績單編號']) && $apply['成績單編號'] === $trans['成績單編號']) ? 'selected' : ''; ?>>
+                                    <?php echo e($trans['成績單編號'] . ' (' . $trans['學期'] . ')'); ?>
+                                </option>
+                            <?php } ?>
+                        </select>
+                    <?php } else { ?>
+                        <span style="color: red;">尚無成績單記錄</span>
+                    <?php } ?>
+                </td>
             </tr>
             <tr>
                 <th>申請日期</th>
                 <td colspan="3">
-                    <input type="date" name="apply_date" value="<?php echo e($applyDate); ?>" required>
+                    <?php echo e($applyDate); ?>
                 </td>
             </tr>
             <tr>
                 <th>電話</th>
-                <td><input type="text" value="<?php echo e(isset($student['電話']) ? $student['電話'] : ''); ?>" readonly></td>
+                <td><?php echo e(isset($student['電話']) ? $student['電話'] : ''); ?></td>
                 <th>Email</th>
-                <td><input type="text" value="<?php echo e(isset($student['email']) ? $student['email'] : ''); ?>" readonly></td>
+                <td><?php echo e(isset($student['email']) ? $student['email'] : ''); ?></td>
             </tr>
             <tr>
                 <th>身分證ID</th>
-                <td colspan="3"><input type="text" value="<?php echo e(isset($student['身分證ID']) ? $student['身分證ID'] : ''); ?>" readonly></td>
+                <td colspan="3"><?php echo e(isset($student['身分證ID']) ? $student['身分證ID'] : ''); ?></td>
             </tr>
             <tr>
                 <th>監護人</th>
@@ -163,8 +212,49 @@ function e($str) {
 
         <!-- 帶上學生帳號，供存檔使用 -->
         <input type="hidden" name="student_account" value="<?php echo e(isset($student['帳號']) ? $student['帳號'] : $studentAccount); ?>">
-
+        <!-- 帶上獎助單位帳號 -->
+        <input type="hidden" name="provider_account" id="provider_account" value="">
+        <!-- 帶上申請編號 -->
+        <input type="hidden" name="apply_id" value="<?php echo e($applyId !== '' ? $apply['申請編號'] : $newApplyId); ?>">
+        <!-- 帶上申請日期 -->
+        <input type="hidden" name="apply_date" value="<?php echo e($applyDate); ?>">
+        <!-- 帶上成績單編號 -->
+        <input type="hidden" name="transcript_id" value="<?php echo e(isset($apply['成績單編號']) && $apply['成績單編號'] !== '' ? $apply['成績單編號'] : $defaultTranscriptId); ?>">
+        
         <button type="submit" class="submit-btn">送出申請</button>
     </form>
+    <button class="submit-btn" onclick="location.href='../Student/studentPage.php'">取消</button>
+
+    <script>
+    // 初始化獎助單位帳號
+    function updateProviderAccount() {
+        var select = document.getElementById('scholarship_name');
+        var option = select.options[select.selectedIndex];
+        var provider = option.getAttribute('data-provider');
+        document.getElementById('provider_account').value = provider || '';
+    }
+    
+    // 同步成績單編號
+    function updateTranscriptId() {
+        var select = document.getElementById('transcript_id');
+        var transcriptIdHidden = document.querySelector('input[name="transcript_id"]');
+        if (select && transcriptIdHidden) {
+            transcriptIdHidden.value = select.value;
+        }
+    }
+    
+    // 頁面載入時執行
+    window.onload = function() {
+        updateProviderAccount();
+        updateTranscriptId();
+    };
+    
+    // 成績單變化時更新隱藏字段
+    document.addEventListener('change', function(e) {
+        if (e.target.id === 'transcript_id') {
+            updateTranscriptId();
+        }
+    });
+    </script>
 </body>
 </html>
