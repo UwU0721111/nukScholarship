@@ -1,22 +1,11 @@
-<?php
-session_start();
-?> 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>學生頁面</title>
+    <title>公告管理</title>
 </head>
 <body>
-    <h4><?php echo htmlspecialchars($_SESSION['name']);?>學生 您好！</h4><br>
-
-    <!-- 功能按鈕區 -->
-    <button onclick="location.href='changeInfo.php'">修改個人資料</button>
-    <button onclick="location.href='../apply/applypage2.php'">申請獎學金</button>
-    <button onclick="location.href='../apply/applypage.php'">查看申請資料</button>
-    <button onclick="location.href='../apply/transcript.php'">查看成績單</button>
-
     <h3>公告</h3><br>
     <?php
     require_once "../dbHandler.inc.php";
@@ -40,7 +29,12 @@ session_start();
     }
     ?>
     </table><br>
-
-    <button onclick="location.href='../logout.inc.php'">登出</button>
+    <h3>發布新公告</h3><br>
+    <form action="annonHandler.inc.php" method="POST">
+        <label>內容：</label>
+        <input type="text" name="content" size="100"><br>
+        <button name="button" value="cancel">取消</button>        
+        <button name="button" value="submit">送出</button>
+    </form>
 </body>
 </html>
