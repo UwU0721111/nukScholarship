@@ -2,7 +2,7 @@
 
 $db_server="localhost";
 $db_user="root";
-$db_pwd="";
+$db_pwd="00000000";
 $db_name="nukscholarship";
 $conn="";
 
@@ -14,6 +14,6 @@ try{
         $db_name
     );
 
-} catch(mysqli_sql_exception){
-    echo"not connected";
+} catch (mysqli_sql_exception $e){
+    echo "not connected";
 }
